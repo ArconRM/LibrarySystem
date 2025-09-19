@@ -17,20 +17,23 @@ public class UserBookService : BaseService<UserBook>, IUserBookService
         _userBookRepository = userBookRepository;
         _userRepository = userRepository;
     }
-
     public async Task<UserBook> AddNewUserBookAsync(Guid userUuid, Guid bookUuid, CancellationToken token)
     {
+        // Получаем пользователя с подпиской для проверки прав
         var user = await _userRepository.GetUserWithSubscription(userUuid, token);
         if (user is null)
             throw new InvalidOperationException("User not found");
-
+        
+        // У пользователя должна быть активная подписка
         if (user.Subscription is null)
             throw new InvalidOperationException("User doesn't have a subscription");
-
+        
+        // Пользователь не может брать более 5 книг одновременно
         var activeUserBooks = await _userBookRepository.GetActiveUserBooksAsync(userUuid, token);
         if (activeUserBooks.Count >= 5)
             throw new InvalidOperationException("User already has 5 active books");
         
+        // Книга может быть выдана только одному пользователю в момент времени
         var isBookTaken = await _userBookRepository.IsBookTakenAsync(bookUuid, token);
         if (isBookTaken)
             throw new InvalidOperationException("Book is already taken");
@@ -45,18 +48,23 @@ public class UserBookService : BaseService<UserBook>, IUserBookService
         
         return await _userBookRepository.GetUserBookWithBook(createdUserBook.Uuid, token);
     }
-
+    
     public async Task<UserBook> ReturnUserBookAsync(Guid userUuid, Guid bookUuid, CancellationToken token)
     {
+        // Проверяем существование пользователя
         var user = await _userRepository.GetUserWithSubscription(userUuid, token);
         if (user is null)
             throw new InvalidOperationException("User not found");
         
+        // Получаем все активные займы пользователя для поиска конкретной книги
         var activeUserBooks = await _userBookRepository.GetActiveUserBooksAsync(userUuid, token);
+        
+        // Ищем активный займ указанной книги у данного пользователя
         var userBook = activeUserBooks.FirstOrDefault(x => x.BookUuid == bookUuid);
         if (userBook is null)
             throw new InvalidOperationException("User book not found");
         
+        // Помечаем книгу как возвращенную, устанавливая дату возврата
         userBook.ReturnedAt ??= DateTime.UtcNow;
         await _userBookRepository.UpdateAsync(userBook, token);
 

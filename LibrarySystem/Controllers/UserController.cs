@@ -17,7 +17,13 @@ public class UserController : ControllerBase
         _userService = userService;
         _logger = logger;
     }
-
+    
+    /// <summary>
+    /// Создает нового пользователя в системе.
+    /// </summary>
+    /// <param name="request">Данные для создания пользователя (FullName, Email, PhoneNumber)</param>
+    /// <param name="token">Токен отмены операции</param>
+    /// <returns>Созданный пользователь</returns>
     [HttpPost(nameof(CreateUser))]
     public async Task<IActionResult> CreateUser(UserRequest request, CancellationToken token)
     {
@@ -30,13 +36,23 @@ public class UserController : ControllerBase
 
             return Ok(response);
         }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex.Message);
+            return Conflict(new { message = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
-            return BadRequest();
+            _logger.LogError(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 
+    /// <summary>
+    /// Получает список всех пользователей.
+    /// </summary>
+    /// <param name="token">Токен отмены операции</param>
+    /// <returns>Список пользователей</returns>
     [HttpGet(nameof(GetAllUsers))]
     public async Task<IActionResult> GetAllUsers(CancellationToken token)
     {
@@ -47,13 +63,25 @@ public class UserController : ControllerBase
             
             return Ok(response);
         }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex.Message);
+            return Conflict(new { message = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
-            return BadRequest();
+            _logger.LogError(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
     
+    /// <summary>
+    /// Получает пользователя со всей связанной информацией.
+    /// Включает подписку и займы книг.
+    /// </summary>
+    /// <param name="uuid">Идентификатор пользователя</param>
+    /// <param name="token">Токен отмены операции</param>
+    /// <returns>Пользователь с полной информацией</returns>
     [HttpGet(nameof(GetUserWithAllInfo))]
     public async Task<IActionResult> GetUserWithAllInfo(Guid uuid, CancellationToken token)
     {
@@ -64,13 +92,24 @@ public class UserController : ControllerBase
             
             return Ok(response);
         }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex.Message);
+            return Conflict(new { message = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
-            return BadRequest();
+            _logger.LogError(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
-
+    
+    /// <summary>
+    /// Обновляет информацию о пользователе.
+    /// </summary>
+    /// <param name="request">Данные для обновления пользователя</param>
+    /// <param name="token">Токен отмены операции</param>
+    /// <returns>Обновленный пользователь</returns>
     [HttpPatch(nameof(UpdateUser))]
     public async Task<IActionResult> UpdateUser(UpdateUserRequest request, CancellationToken token)
     {
@@ -83,13 +122,24 @@ public class UserController : ControllerBase
 
             return Ok(response);
         }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex.Message);
+            return Conflict(new { message = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
-            return BadRequest();
+            _logger.LogError(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 
+    /// <summary>
+    /// Устанавливает подписку для пользователя.
+    /// </summary>
+    /// <param name="request">Данные подписки (UserUuid, StartDate, EndDate, Price)</param>
+    /// <param name="token">Токен отмены операции</param>
+    /// <returns>Пользователь с созданной подпиской</returns>
     [HttpPatch(nameof(SetUserSubscription))]
     public async Task<IActionResult> SetUserSubscription(SetUserSubscriptionRequest request, CancellationToken token)
     {
@@ -102,13 +152,24 @@ public class UserController : ControllerBase
             
             return Ok(response);
         }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex.Message);
+            return Conflict(new { message = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
-            return BadRequest();
+            _logger.LogError(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 
+    /// <summary>
+    /// Удаляет пользователя из системы.
+    /// </summary>
+    /// <param name="uuid">Идентификатор пользователя для удаления</param>
+    /// <param name="token">Токен отмены операции</param>
+    /// <returns>Результат операции удаления</returns>
     [HttpDelete(nameof(DeleteUser))]
     public async Task<IActionResult> DeleteUser(Guid uuid, CancellationToken token)
     {
@@ -117,10 +178,15 @@ public class UserController : ControllerBase
             var isDeleted = await _userService.DeleteAsync(uuid, token);
             return Ok(isDeleted);
         }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex.Message);
+            return Conflict(new { message = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
-            return BadRequest();
+            _logger.LogError(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 }

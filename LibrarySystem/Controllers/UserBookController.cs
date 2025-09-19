@@ -18,6 +18,13 @@ public class UserBookController : ControllerBase
         _logger = logger;
     }
 
+    /// <summary>
+    /// Выдает книгу пользователю.
+    /// Проверяет все бизнес-правила.
+    /// </summary>
+    /// <param name="request">Запрос на займ книги (UserUuid, BookUuid)</param>
+    /// <param name="token">Токен отмены операции</param>
+    /// <returns>Информация о созданном займе</returns>
     [HttpPost(nameof(AddUserBook))]
     public async Task<IActionResult> AddUserBook(UserBookRequest request, CancellationToken token)
     {
@@ -28,13 +35,25 @@ public class UserBookController : ControllerBase
 
             return Ok(response);
         }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex.Message);
+            return Conflict(new { message = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
-            return BadRequest();
+            _logger.LogError(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 
+    /// <summary>
+    /// Возвращает книгу пользователем.
+    /// Помечает займ как завершенный, устанавливая дату возврата.
+    /// </summary>
+    /// <param name="request">Запрос на возврат книги (UserUuid, BookUuid)</param>
+    /// <param name="token">Токен отмены операции</param>
+    /// <returns>Информация о возвращенной книге</returns>
     [HttpDelete(nameof(ReturnUserBook))]
     public async Task<IActionResult> ReturnUserBook(UserBookRequest request, CancellationToken token)
     {
@@ -45,10 +64,15 @@ public class UserBookController : ControllerBase
             
             return Ok(response);
         }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError(ex.Message);
+            return Conflict(new { message = ex.Message });
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
-            return BadRequest();
+            _logger.LogError(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 }

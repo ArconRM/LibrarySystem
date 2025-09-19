@@ -12,6 +12,7 @@ public class SubscriptionConfiguration: IEntityTypeConfiguration<Subscription>
         builder.Property(s => s.Uuid)
             .ValueGeneratedOnAdd();
         
+        // Связь Subscription -> User (один к одному)
         builder
             .HasOne(s => s.User)
             .WithOne(u => u.Subscription)

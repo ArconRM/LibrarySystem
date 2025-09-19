@@ -12,11 +12,13 @@ public class UserBookConfiguration: IEntityTypeConfiguration<UserBook>
         builder.Property(ub => ub.Uuid)
             .ValueGeneratedOnAdd();
         
+        // Связь UserBook -> User (многие к одному)
         builder
             .HasOne(ub => ub.User)
             .WithMany(u => u.UserBooks)
             .HasForeignKey(ub => ub.UserUuid);
         
+        // Связь UserBook -> Book (многие к одному)
         builder
             .HasOne(ub => ub.Book)
             .WithMany()

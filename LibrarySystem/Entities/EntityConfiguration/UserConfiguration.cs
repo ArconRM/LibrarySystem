@@ -18,6 +18,7 @@ public class UserConfiguration: IEntityTypeConfiguration<User>
         builder.Property(u => u.Email)
             .IsRequired();
 
+        // Связь User -> UserBooks (один ко многим)
         builder
             .HasMany(u => u.UserBooks)
             .WithOne(ub => ub.User)

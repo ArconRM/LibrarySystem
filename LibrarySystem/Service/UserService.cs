@@ -19,13 +19,16 @@ public class UserService : BaseService<User>, IUserService
 
     public async Task<User> SetUserSubscription(Guid userUuid, Subscription subscription, CancellationToken token)
     {
+        // Получаем пользователя с текущей подпиской для проверки
         var user = await _userRepository.GetUserWithSubscription(userUuid, token);
         if (user == null)
             throw new InvalidOperationException("User not found");
         
+        // Пользователь может иметь только одну активную подписку
         if (user.Subscription is not null)
             throw new InvalidOperationException("User has already subscription");
 
+        // Создаем новую подписку на основе переданных данных
         var newSubscription = new Subscription
         {
             Uuid = Guid.NewGuid(),
@@ -38,7 +41,7 @@ public class UserService : BaseService<User>, IUserService
         
         return await _userRepository.GetUserWithAllInfo(userUuid, token);
     }
-
+    
     public async Task<User?> GetUserWithAllInfo(Guid userUuid, CancellationToken token)
     {
         return await _userRepository.GetUserWithAllInfo(userUuid, token);
