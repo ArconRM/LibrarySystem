@@ -1,9 +1,8 @@
 using LibrarySystem.Core.BaseEntities;
 using LibrarySystem.Entities;
-using LibrarySystem.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using LibrarySystem.Persistence.Repository.Interfaces;
 
-namespace LibrarySystem.Repository;
+namespace LibrarySystem.Persistence.Repository;
 
 public class BookRepository: BaseRepository<Book>, IBookRepository
 {

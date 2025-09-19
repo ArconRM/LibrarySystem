@@ -1,5 +1,5 @@
-using LibrarySystem.Repository;
-using LibrarySystem.Repository.Interfaces;
+using LibrarySystem.Persistence.Repository;
+using LibrarySystem.Persistence.Repository.Interfaces;
 using LibrarySystem.Service;
 using LibrarySystem.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;

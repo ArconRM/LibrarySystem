@@ -1,7 +1,7 @@
 using LibrarySystem.Core.Interfaces;
 using LibrarySystem.Entities;
 
-namespace LibrarySystem.Repository.Interfaces;
+namespace LibrarySystem.Persistence.Repository.Interfaces;
 
 public interface IBookRepository: IBaseRepository<Book>
 {

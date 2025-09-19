@@ -1,9 +1,9 @@
 using LibrarySystem.Core.BaseEntities;
 using LibrarySystem.Entities;
-using LibrarySystem.Repository.Interfaces;
+using LibrarySystem.Persistence.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibrarySystem.Repository;
+namespace LibrarySystem.Persistence.Repository;
 
 public class UserRepository : BaseRepository<User>, IUserRepository
 {

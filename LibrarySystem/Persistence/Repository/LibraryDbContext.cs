@@ -2,7 +2,7 @@ using System.Reflection;
 using LibrarySystem.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibrarySystem.Repository;
+namespace LibrarySystem.Persistence.Repository;
 
 public class LibraryDbContext: DbContext
 {

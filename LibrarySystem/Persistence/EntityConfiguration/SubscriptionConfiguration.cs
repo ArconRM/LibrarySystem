@@ -1,7 +1,8 @@
+using LibrarySystem.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LibrarySystem.Entities.EntityConfiguration;
+namespace LibrarySystem.Persistence.EntityConfiguration;
 
 public class SubscriptionConfiguration: IEntityTypeConfiguration<Subscription>
 {
