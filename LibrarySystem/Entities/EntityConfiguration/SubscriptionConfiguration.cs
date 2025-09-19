@@ -15,6 +15,7 @@ public class SubscriptionConfiguration: IEntityTypeConfiguration<Subscription>
         builder
             .HasOne(s => s.User)
             .WithOne(u => u.Subscription)
-            .HasForeignKey<Subscription>(s => s.UserUuid);
+            .HasForeignKey<Subscription>(s => s.UserUuid)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
