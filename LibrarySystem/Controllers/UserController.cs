@@ -38,11 +38,11 @@ public class UserController : ControllerBase
     }
 
     [HttpDelete(nameof(DeleteUser))]
-    public async Task<IActionResult> DeleteUser(DeleteRequest request, CancellationToken token)
+    public async Task<IActionResult> DeleteUser(Guid uuid, CancellationToken token)
     {
         try
         {
-            var isDeleted = await _userService.DeleteAsync(request.Uuid, token);
+            var isDeleted = await _userService.DeleteAsync(uuid, token);
             return Ok(isDeleted);
         }
         catch (Exception ex)
